@@ -114,7 +114,7 @@ export const RidesView: React.FC = () => {
           </span>
         </div>
 
-        <LeafletMap center={campusCoords} zoom={12} markers={markers} routes={routes} className="h-80 w-full" />
+        <LeafletMap center={campusCoords} zoom={12} markers={markers} routes={routes} className="h-64 sm:h-80 w-full" />
       </div>
 
       {/* Rides List Section */}

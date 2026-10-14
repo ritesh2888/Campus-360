@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuthModal } from './components/AuthModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
 import { CampusProvider } from './context/CampusContext';
@@ -38,7 +39,7 @@ const MainApp: React.FC = () => {
         />
 
         {/* Dynamic View Content */}
-        <main className="flex-1 min-w-0 px-4 sm:px-8 py-6 overflow-y-auto">
+        <main className="flex-1 min-w-0 px-3 sm:px-8 pt-4 sm:pt-6 pb-24 md:pb-8 overflow-y-auto">
           {activeTab === 'dashboard' && (
             <DashboardView
               setActiveTab={setActiveTab}
@@ -61,6 +62,13 @@ const MainApp: React.FC = () => {
           {activeTab === 'profile' && <ProfileView />}
         </main>
       </div>
+
+      {/* Mobile Bottom Navigation Bar (Thumb Friendly) */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+      />
 
       {/* MiniMoth Auth Modal */}
       <AuthModal

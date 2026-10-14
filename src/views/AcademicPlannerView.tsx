@@ -6,6 +6,8 @@ import {
   CheckCircle2,
   HelpCircle,
   Lock,
+  Minus,
+  Plus,
   RotateCcw,
   Sliders,
   TrendingUp,
@@ -121,14 +123,14 @@ export const AcademicPlannerView: React.FC = () => {
             <div className="flex justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
               <span>Min Pass: 4.00</span>
               <span>Mid: 7.00</span>
-              <span>Dean's List: 9.00</span>
+              <span className="hidden sm:inline">Dean's List: 9.00</span>
               <span>Max: 10.00</span>
             </div>
           </div>
 
           {/* Large Result Badge */}
-          <div className="shrink-0 flex items-center gap-4">
-            <div className="p-4 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs text-center">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full lg:w-auto">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs text-center flex-1 sm:flex-initial">
               <div className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">Max Possible SGPA</div>
               <div className="text-2xl font-black text-indigo-700 dark:text-indigo-400 font-mono mt-0.5">
                 {sgpaResult.maxPossibleSGPA.toFixed(2)}
@@ -137,22 +139,22 @@ export const AcademicPlannerView: React.FC = () => {
             </div>
 
             <div
-              className={`p-4 rounded-xl border flex items-center gap-3 shadow-2xs ${
+              className={`p-3.5 sm:p-4 rounded-xl border flex items-center justify-center sm:justify-start gap-3 shadow-2xs flex-1 sm:flex-initial ${
                 sgpaResult.isAchievable
                   ? 'bg-emerald-100/70 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200'
                   : 'bg-rose-100/70 dark:bg-rose-950/60 border-rose-300 dark:border-rose-700 text-rose-800 dark:text-rose-200'
               }`}
             >
               {sgpaResult.isAchievable ? (
-                <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-600 dark:text-emerald-400 shrink-0" />
               ) : (
-                <AlertCircle className="w-8 h-8 text-rose-600 dark:text-rose-400 shrink-0" />
+                <AlertCircle className="w-7 h-7 sm:w-8 sm:h-8 text-rose-600 dark:text-rose-400 shrink-0" />
               )}
               <div>
                 <div className="text-xs uppercase tracking-wider font-bold">
                   {sgpaResult.isAchievable ? 'Target Status' : 'Result'}
                 </div>
-                <div className="text-xl font-black uppercase tracking-tight">
+                <div className="text-lg sm:text-xl font-black uppercase tracking-tight">
                   {sgpaResult.isAchievable ? 'ACHIEVABLE' : 'NOT ACHIEVABLE'}
                 </div>
               </div>
@@ -263,7 +265,107 @@ export const AcademicPlannerView: React.FC = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+        {/* Mobile View: Responsive Subject Cards (md:hidden) */}
+        <div className="md:hidden space-y-4">
+          {subjects.map((sub) => {
+            const reqs = AcademicCalculator.calculateSubjectMarksRequirements(sub);
+            const reqMap = Object.fromEntries(reqs.map((r) => [r.grade, r]));
+
+            return (
+              <div
+                key={sub.id}
+                className="p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3.5"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-900 dark:text-white text-sm">{sub.code}</span>
+                      <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold text-[10px] border border-indigo-200 dark:border-indigo-800">
+                        {sub.credits} Credits
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{sub.name}</p>
+                  </div>
+                  <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 shrink-0">
+                    End-Sem Max: {sub.endSemMax}
+                  </span>
+                </div>
+
+                {/* Internal Marks Stepper on Mobile */}
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">Internal Marks:</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-label="Decrease internal marks"
+                      onClick={() => updateSubjectInternalMarks(sub.id, Math.max(0, sub.internalScored - 1))}
+                      className="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-700 dark:text-slate-200 active:scale-95 shadow-2xs font-bold"
+                    >
+                      <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        min="0"
+                        max={sub.internalMax}
+                        value={sub.internalScored}
+                        onChange={(e) => updateSubjectInternalMarks(sub.id, parseInt(e.target.value) || 0)}
+                        className="w-12 py-1 px-1 text-center font-mono font-bold text-sm text-indigo-600 dark:text-indigo-400 bg-transparent focus:outline-none"
+                      />
+                      <span className="text-xs font-mono text-slate-400">/{sub.internalMax}</span>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label="Increase internal marks"
+                      onClick={() => updateSubjectInternalMarks(sub.id, Math.min(sub.internalMax, sub.internalScored + 1))}
+                      className="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-700 dark:text-slate-200 active:scale-95 shadow-2xs font-bold"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Grade Grid on Mobile (3 cols x 2 rows) */}
+                <div>
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
+                    End-Sem Marks Needed by Target Grade:
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['O', 'A', 'B', 'C', 'D', 'P'] as GradeLetter[]).map((grade) => {
+                      const item = reqMap[grade];
+                      if (!item) return null;
+
+                      return (
+                        <div
+                          key={grade}
+                          className={`p-2 rounded-xl border text-center transition ${
+                            item.isAchievable
+                              ? 'bg-emerald-50/70 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/80 text-emerald-900 dark:text-emerald-200'
+                              : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300'
+                          }`}
+                        >
+                          <div className="text-[11px] font-bold tracking-tight">Grade {grade}</div>
+                          {item.isAchievable ? (
+                            <div className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400 mt-0.5">
+                              {item.marksNeededInEndSem}/{sub.endSemMax}
+                            </div>
+                          ) : (
+                            <div className="text-[10px] font-semibold text-rose-600 dark:text-rose-400 mt-0.5 flex items-center justify-center gap-0.5">
+                              <Lock className="w-2.5 h-2.5" /> Locked
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop View: Full 10-Column Comparison Table (hidden md:block) */}
+        <div className="hidden md:block overflow-x-auto rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
           <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
             <thead className="bg-slate-50 dark:bg-slate-800/80 uppercase text-[11px] font-semibold text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
               <tr>

@@ -94,18 +94,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ setActiveTab, onOp
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto">
             {!session && (
               <button
                 onClick={onOpenAuth}
-                className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm shadow-indigo-600/20 transition flex items-center gap-2"
+                className="w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm shadow-indigo-600/20 transition flex items-center gap-2"
               >
                 Connect MiniMoth Session
               </button>
             )}
             <button
               onClick={() => setActiveTab('academic-planner')}
-              className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold shadow-2xs transition flex items-center gap-2"
+              className="w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold shadow-2xs transition flex items-center gap-2"
             >
               <GraduationCap className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               Check SGPA Math
@@ -247,13 +247,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ setActiveTab, onOp
             </div>
 
             {/* Day Selector (Mon - Fri) */}
-            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl self-start sm:self-auto">
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-full sm:w-auto overflow-x-auto justify-between sm:justify-start">
               {(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] as DayOfWeek[]).map((day) => (
                 <button
                   key={day}
                   type="button"
                   onClick={() => setSelectedDay(day)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-semibold transition text-center whitespace-nowrap ${
                     selectedDay === day
                       ? 'bg-white dark:bg-slate-700 text-indigo-700 dark:text-indigo-200 shadow-2xs'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'

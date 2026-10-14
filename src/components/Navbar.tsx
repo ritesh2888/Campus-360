@@ -116,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {showNotifMenu && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-4 text-slate-800 dark:text-slate-200 z-50">
+              <div className="absolute -right-8 sm:right-0 mt-2 w-[calc(100vw-2.5rem)] max-w-sm sm:w-96 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-4 text-slate-800 dark:text-slate-200 z-50">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2">
                     <Bell className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />

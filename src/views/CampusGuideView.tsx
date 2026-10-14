@@ -71,7 +71,7 @@ export const CampusGuideView: React.FC = () => {
           </span>
         </div>
 
-        <LeafletMap center={campusCoords} zoom={18} markers={mapMarkers} className="h-80 w-full" />
+        <LeafletMap center={campusCoords} zoom={18} markers={mapMarkers} className="h-64 sm:h-80 w-full" />
 
         {/* Location cards horizontal scroller */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
